@@ -57,11 +57,26 @@ function updateStepDetail(stepNum, detail) {
 
 function saveGeneratedSignature() {
     if (generatedSignatureData) {
-        const link = document.createElement('a');
-        link.download = 'generated-signature.png';
-        link.href = generatedSignatureData;
-        link.click();
-        updateStatus('美化签名已保存');
+        // 如果是直接的 URL，可以使用 fetch 下载并转换为 blob 再保存
+        // 但是由于跨域问题，fetch(generatedSignatureData) 可能会失败
+        // 我们尝试打开新窗口让用户手动保存，或者利用一个简单的跨域代理，这里最稳妥的是尝试下载
+        
+        fetch(generatedSignatureData)
+            .then(res => res.blob())
+            .then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.download = 'generated-signature.png';
+                link.href = url;
+                link.click();
+                window.URL.revokeObjectURL(url);
+                updateStatus('美化签名已保存');
+            })
+            .catch(err => {
+                console.warn('跨域下载失败，尝试在新标签页打开:', err);
+                window.open(generatedSignatureData, '_blank');
+                updateStatus('由于浏览器安全限制，已在新标签页打开图片，请右键保存');
+            });
     }
 }
 
@@ -103,20 +118,14 @@ async function generateSignatureImage(text, genModel) {
             throw new Error('API返回格式错误，未找到图片URL');
         }
         
-        updateStepDetail(1, '获取到图片 URL，正在下载图片...');
-        const imageResponse = await fetch(imageUrl);
-        const blob = await imageResponse.blob();
-        
-        const imageData = await new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onloadend = () => resolve(reader.result);
-            reader.onerror = reject;
-            reader.readAsDataURL(blob);
-        });
+        updateStepDetail(1, '获取到图片 URL，正在处理...');
+        // 由于火山引擎返回的图片 URL (TOS) 可能不支持浏览器的跨域请求 (CORS)，
+        // 我们直接将 URL 赋值给 img 标签，而不是用 fetch 下载 blob。
+        // 这会跳过 FileReader 转换为 Base64 的过程，直接利用浏览器的图片加载机制。
         
         updateStepDetail(1, '签名图片生成完毕');
         updateStep(1, '✅', true, false);
-        return imageData;
+        return imageUrl; // 直接返回图片 URL
     } catch (error) {
         console.error('签名生成失败:', error);
         updateStepDetail(1, `生成失败: ${error.message}`);
