@@ -85,7 +85,7 @@ async function generateSignatureImage(text, genModel) {
                 'Authorization': `Bearer ${apiKey}`
             },
             body: JSON.stringify({
-                model: genModel || 'seeddream-latest',
+                model: 'ep-20250303102432-84b2c',
                 prompt: promptText,
                 n: 1,
                 size: '512x512'
