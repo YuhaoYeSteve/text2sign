@@ -92,7 +92,7 @@ async function generateSignatureImage(text, genModel) {
         
         if (!response.ok) {
             const errorData = await response.json().catch(() => ({}));
-            throw new Error(`API调用失败: HTTP ${response.status} - ${errorData.message || '未知错误'}`);
+            throw new Error(`API调用失败: HTTP ${response.status} - ${errorData.error?.message || '未知错误'}`);
         }
         
         updateStepDetail(1, 'API 响应成功，正在提取图片 URL...');
