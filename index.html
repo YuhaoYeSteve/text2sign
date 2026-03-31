@@ -3,21 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>手势手写签名生成器</title>
-    <link rel="stylesheet" href="style.css">
+    <title>豆包大模型个性化签名生成器</title>
+    <link rel="stylesheet" href="src/css/style.css">
 </head>
 <body>
     <div class="container">
-        <h1>手势手写签名生成器</h1>
+        <h1>豆包大模型个性化签名生成器</h1>
         
         <div class="instruction">
-            <p><strong>使用说明：</strong>将食指和拇指捏合在一起即可开始写字，松开停止。</p>
+            <p><strong>使用说明：</strong>在下方输入框中输入您的名字，配置好 API 密钥后，点击生成美化签名。</p>
         </div>
 
-        <div class="video-container">
-            <video id="webcam" class="webcam" autoplay playsinline></video>
-            <canvas id="canvas" class="canvas"></canvas>
-            <canvas id="signature" class="signature"></canvas>
+        <div class="input-section">
+            <input type="text" id="signatureInput" placeholder="请输入需要生成签名的名字">
         </div>
 
         <div class="api-section">
@@ -26,10 +24,6 @@
         </div>
 
         <div class="model-section">
-            <label for="ocrModel">VLM模型：</label>
-            <select id="ocrModel">
-                <option value="seed-2.0-pro">Seed 2.0 Pro</option>
-            </select>
             <label for="genModel">签名生成模型：</label>
             <select id="genModel">
                 <option value="seeddream-latest">SeedDream Latest</option>
@@ -37,9 +31,6 @@
         </div>
 
         <div class="controls">
-            <button id="startBtn">开始</button>
-            <button id="clearBtn">清除</button>
-            <button id="saveBtn">保存原始签名</button>
             <button id="generateBtn" disabled title="请先输入火山引擎API密钥">生成美化签名</button>
         </div>
 
@@ -48,35 +39,16 @@
             <div class="step" id="step1">
                 <span class="step-number">1</span>
                 <div class="step-content">
-                    <span class="step-text">调用 VLM 模型识别文字...</span>
-                    <div class="step-detail" id="step1Detail"></div>
-                </div>
-                <span class="step-status">⏳</span>
-            </div>
-            <div class="step" id="step2">
-                <span class="step-number">2</span>
-                <div class="step-content">
-                    <span class="step-text">识别结果：<span id="recognizedText">-</span></span>
-                </div>
-                <span class="step-status" id="step2Status">⏳</span>
-            </div>
-            <div class="step" id="step3">
-                <span class="step-number">3</span>
-                <div class="step-content">
                     <span class="step-text">调用 SeedDream 模型生成签名...</span>
-                    <div class="step-detail" id="step3Detail"></div>
+                    <div class="step-detail" id="step1Detail"></div>
                 </div>
                 <span class="step-status">⏳</span>
             </div>
         </div>
 
         <div class="comparison" id="comparisonSection" style="display: none;">
-            <h3>签名对比</h3>
-            <div class="comparison-images">
-                <div class="image-box">
-                    <h4>原始签名</h4>
-                    <img id="originalSignature" alt="原始签名">
-                </div>
+            <h3>签名结果</h3>
+            <div class="comparison-images" style="justify-content: center;">
                 <div class="image-box">
                     <h4>美化签名</h4>
                     <img id="generatedSignature" alt="美化签名">
@@ -86,14 +58,10 @@
         </div>
 
         <div class="status">
-            <p id="statusText">准备就绪，点击开始按钮启动相机</p>
+            <p id="statusText">准备就绪，请输入名字并点击生成美化签名</p>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
-    <script src="script.js"></script>
+    <script src="src/js/script.js"></script>
 </body>
 </html>
