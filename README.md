@@ -8,6 +8,7 @@
 [![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/CSS)
 [![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 [![Volcengine](https://img.shields.io/badge/Volcengine-SeedDream-blue?style=for-the-badge)](https://www.volcengine.com/)
+[![Trae](https://img.shields.io/badge/Built_with-Trae_Vibe_Coding-blueviolet?style=for-the-badge)](https://www.trae.ai)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 
 [中文文档](#中文文档) • [English Documentation](#english-documentation)
@@ -21,6 +22,8 @@
 ### 📖 项目简介
 
 **text2sign** 是一个基于纯前端（Vanilla JS）构建的轻量级 Web 应用。通过输入你的名字，它能无缝对接**火山引擎 (Volcengine) 的 SeedDream 大模型**，为你生成极具艺术感和个人风格的手写签名图片。
+
+> 💡 **本项目是完全基于 Trae Vibe Coding 完成。**
 
 无需安装任何依赖，无需复杂的构建工具，开箱即用，只需一个浏览器！
 
@@ -64,6 +67,8 @@
 ### 📖 Introduction
 
 **text2sign** is a lightweight, Vanilla JS web application. By simply typing your name, it seamlessly integrates with the **Volcengine SeedDream Large Model** to generate an artistic, highly personalized handwritten signature image.
+
+> 💡 **This project is completely built based on Trae Vibe Coding.**
 
 No dependencies, no build tools required. It works out-of-the-box right in your browser!
 

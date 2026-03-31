@@ -86,14 +86,13 @@ async function generateSignatureImage(text, genModel) {
             },
             body: JSON.stringify({
                 model: 'ep-20250303102432-84b2c',
-                prompt: promptText,
-                n: 1,
-                size: '512x512'
+                prompt: promptText
             })
         });
         
         if (!response.ok) {
-            throw new Error(`API调用失败: HTTP ${response.status}`);
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(`API调用失败: HTTP ${response.status} - ${errorData.message || '未知错误'}`);
         }
         
         updateStepDetail(1, 'API 响应成功，正在提取图片 URL...');
