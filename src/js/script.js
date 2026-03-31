@@ -85,7 +85,7 @@ async function generateSignatureImage(text, genModel) {
                 'Authorization': `Bearer ${apiKey}`
             },
             body: JSON.stringify({
-                model: 'ep-20250303102432-84b2c',
+                model: 'ep-20250909161150-2tfck',
                 prompt: promptText
             })
         });
