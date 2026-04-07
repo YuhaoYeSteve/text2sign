@@ -4,9 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>豆包大模型个性化签名生成器</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="src/css/style.css">
 </head>
 <body>
+    <nav class="navbar">
+        <div class="nav-content">
+            <div class="nav-brand">签名生成器</div>
+            <div class="nav-user" id="navUserArea">
+                <span id="navUsername" style="display: none;">欢迎, User</span>
+                <button id="navLoginBtn" class="nav-btn">登录 / 注册</button>
+                <button id="navLogoutBtn" class="nav-btn" style="display: none;">退出登录</button>
+            </div>
+        </div>
+    </nav>
+
     <div class="container">
         <h1>豆包大模型个性化签名生成器</h1>
         
@@ -20,14 +34,21 @@
 
         <div class="api-section">
             <label for="apiKey">火山引擎API密钥：</label>
-            <input type="password" id="apiKey" placeholder="请输入API密钥">
+            <div id="apiUnauthMsg" class="api-msg">请先登录以使用和保存您的 API Key。</div>
+            <div id="apiInputWrapper" class="api-input-wrapper" style="display: none;">
+                <input type="password" id="apiKey" placeholder="请输入API密钥">
+                <button type="button" id="toggleApiKeyVisibility" class="toggle-visibility-btn" title="显示/隐藏密钥">👁</button>
+            </div>
         </div>
 
         <div class="model-section" style="display: none;">
-            <label for="genModel">签名生成模型：</label>
-            <select id="genModel">
-                <option value="ep-20250909161150-2tfck">SeedDream Latest</option>
-            </select>
+            <label for="apiEndpoint">API 端点地址 (Endpoint)：</label>
+            <input type="text" id="apiEndpoint" placeholder="https://ark.cn-beijing.volces.com/api/v3/images/generations">
+        </div>
+
+        <div class="model-section" style="display: none;">
+            <label for="genModel">模型 ID (Model)：</label>
+            <input type="text" id="genModel" placeholder="ep-20250909161150-2tfck">
         </div>
 
         <div class="controls">
@@ -59,6 +80,23 @@
 
         <div class="status">
             <p id="statusText">准备就绪，请输入名字并点击生成美化签名</p>
+        </div>
+    </div>
+
+    <!-- Login/Register Modal -->
+    <div id="authModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" id="closeModalBtn">&times;</span>
+            <h2 id="modalTitle">登录</h2>
+            <div class="modal-body">
+                <input type="text" id="authUsername" placeholder="用户名" autocomplete="off">
+                <input type="password" id="authPassword" placeholder="密码">
+                <div id="authErrorMsg" class="auth-error"></div>
+                <button id="authSubmitBtn">登录</button>
+            </div>
+            <div class="modal-footer">
+                <span id="authSwitchText">没有账号？<a href="#" id="authSwitchLink">去注册</a></span>
+            </div>
         </div>
     </div>
 
