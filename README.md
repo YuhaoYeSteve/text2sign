@@ -28,7 +28,7 @@
 
 > 💡 **本项目是完全基于 Trae Vibe Coding 完成。**
 
-前端采用原生 HTML/CSS/JS 构建，后端基于 Express + MySQL 提供用户认证与 API Key 管理服务。
+前端采用原生 HTML/CSS/JS 构建，UI 遵循 Apple 设计规范；后端基于 Express + MySQL 提供用户认证与 API Key 管理服务。
 
 ### 🏗️ 项目架构
 
@@ -36,8 +36,8 @@
 text2sign/
 ├── index.html              # 前端主页面
 ├── src/
-│   ├── css/style.css       # 前端样式
-│   └── js/script.js        # 前端逻辑
+│   ├── css/style.css       # 前端样式（Apple Design System）
+│   └── js/script.js        # 前端逻辑（SPA 路由 + 状态管理）
 ├── backend/
 │   ├── index.js            # Express 后端服务
 │   ├── db.js               # MySQL 数据库连接池
@@ -48,14 +48,17 @@ text2sign/
 
 ### 🚀 核心特性
 
+- **🍎 Apple 风格 UI**：采用 Apple 色彩体系、毛玻璃导航栏、圆角卡片、精致阴影与流畅动画，全屏沉浸式布局。
+- **🔀 SPA 多视图导航**：首页（Hero + CTA + 功能展示）与签名工作台两个视图，支持 URL Hash 路由与浏览器前进/后退。
 - **🔐 用户认证系统**：支持注册/登录，密码加密存储（bcrypt），JWT Token 鉴权。
 - **🔑 API Key 管理**：用户可绑定火山引擎 API Key，服务端安全存储，登录后自动加载。
-- **⌨️ 极简输入**：直接输入名字即可生成签名，方便快捷。
+- **⌨️ 极简输入**：直接输入名字即可生成签名，支持 Enter 快捷键触发。
 - **🎨 大模型赋能**：对接火山引擎 SeedDream 模型，生成高质量、白底黑字的流畅手写体。
-- **⚙️ 高级设置**：支持自定义 API 端点地址和模型 ID，灵活适配不同模型版本。
+- **⚙️ 高级设置**：支持自定义 API 端点地址和模型 ID，各字段均支持显示/隐藏切换，灵活适配不同模型版本。
 - **💾 一键保存**：生成的签名支持一键下载至本地，方便用于电子文档、名片等场景。
-- **🖥️ 现代化界面**：多视图 SPA 导航（首页 + 工作台），Lucide 图标库，流畅的动画与交互体验。
-- **📊 生成流程可视化**：实时展示签名生成的步骤与状态，清晰直观。
+- **🖼️ 左右分栏工作台**：左侧输入配置区 + 右侧结果预览区，操作与结果一目了然。
+- **🔄 加载状态反馈**：按钮加载动画、状态栏实时提示，操作过程清晰可感知。
+- **✨ Lucide 图标库**：全站使用 Lucide 图标，视觉统一、专业精致。
 
 ### 🛠️ 使用方法
 
@@ -93,10 +96,11 @@ text2sign/
 
 #### 生成与保存
 
-1. 注册/登录账号。
-2. 在设置中输入您的 [火山引擎 API 密钥](https://console.volcengine.com/)。
-3. 输入你的名字，点击**"生成美化签名"**。
-4. 等待生成完成后，点击**"保存美化签名"**即可下载图片。
+1. 在首页点击**"立即开始创建"**进入签名工作台。
+2. 注册/登录账号（未登录会自动弹出登录框）。
+3. 输入您的 [火山引擎 API 密钥](https://console.volcengine.com/)。
+4. 输入你的名字，点击**"生成美化签名"**（或按 Enter 键）。
+5. 等待生成完成后，点击**"保存签名"**即可下载图片。
 
 ### 🔧 后端 API
 
@@ -129,7 +133,7 @@ text2sign/
 
 > 💡 **This project is completely built based on Trae Vibe Coding.**
 
-The frontend is built with vanilla HTML/CSS/JS, while the backend is powered by Express + MySQL, providing user authentication and API Key management services.
+The frontend is built with vanilla HTML/CSS/JS following Apple's design language, while the backend is powered by Express + MySQL, providing user authentication and API Key management services.
 
 ### 🏗️ Project Architecture
 
@@ -137,8 +141,8 @@ The frontend is built with vanilla HTML/CSS/JS, while the backend is powered by 
 text2sign/
 ├── index.html              # Frontend main page
 ├── src/
-│   ├── css/style.css       # Frontend styles
-│   └── js/script.js        # Frontend logic
+│   ├── css/style.css       # Frontend styles (Apple Design System)
+│   └── js/script.js        # Frontend logic (SPA routing + state management)
 ├── backend/
 │   ├── index.js            # Express backend service
 │   ├── db.js               # MySQL connection pool
@@ -149,14 +153,17 @@ text2sign/
 
 ### 🚀 Features
 
+- **🍎 Apple-style UI**: Apple color palette, frosted glass navbar, rounded cards, refined shadows, smooth animations, and full-screen immersive layout.
+- **🔀 SPA Multi-view Navigation**: Home view (Hero + CTA + Feature showcase) and Signature Workspace, with URL hash routing and browser back/forward support.
 - **🔐 User Authentication**: Registration/login with bcrypt password hashing and JWT token authentication.
 - **🔑 API Key Management**: Bind your Volcengine API Key securely on the server side, auto-loaded after login.
-- **⌨️ Simple Input**: Type your name to generate a signature, quick and easy.
+- **⌨️ Simple Input**: Type your name to generate a signature, with Enter key shortcut support.
 - **🎨 AI-Powered**: Integrates with Volcengine's SeedDream model to generate high-quality, fluent handwritten styles with a white background and black text.
-- **⚙️ Advanced Settings**: Customize API endpoint and model ID to flexibly adapt to different model versions.
+- **⚙️ Advanced Settings**: Customize API endpoint and model ID, each field with show/hide toggle, flexibly adapting to different model versions.
 - **💾 One-Click Save**: Download your generated signature instantly for use in digital documents, business cards, etc.
-- **🖥️ Modern UI**: Multi-view SPA navigation (Home + Workspace), Lucide icons, smooth animations and interactions.
-- **📊 Generation Progress Visualization**: Real-time step-by-step status display during signature generation.
+- **🖼️ Split-panel Workspace**: Left panel for input configuration + Right panel for result preview, keeping operations and results in clear view.
+- **🔄 Loading State Feedback**: Button loading animations and real-time status bar updates for clear operation progress.
+- **✨ Lucide Icons**: Consistent, professional iconography throughout the app using the Lucide icon library.
 
 ### 🛠️ Getting Started
 
@@ -194,10 +201,11 @@ text2sign/
 
 #### Generate & Save
 
-1. Register/Login to your account.
-2. Enter your [Volcengine API Key](https://console.volcengine.com/) in the settings.
-3. Type your name and click **"Generate Beautiful Signature"**.
-4. Once generated, click **"Save Signature"** to download the image.
+1. Click **"Start Creating Now"** on the home page to enter the Signature Workspace.
+2. Register/Login to your account (login modal appears automatically if not logged in).
+3. Enter your [Volcengine API Key](https://console.volcengine.com/) in the settings.
+4. Type your name and click **"Generate Beautiful Signature"** (or press Enter).
+5. Once generated, click **"Save Signature"** to download the image.
 
 ### 🔧 Backend API
 
