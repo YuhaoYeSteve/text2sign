@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>豆包大模型个性化签名生成器</title>
+    <title>Text2Sign - AI 签名生成器</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
     <link rel="stylesheet" href="src/css/style.css">
 </head>
 <body>
@@ -21,72 +22,134 @@
         </div>
     </nav>
 
-    <div class="container">
-        <h1>豆包大模型个性化签名生成器</h1>
-        
-        <div class="instruction">
-            <p><strong>使用说明：</strong>在下方输入框中输入您的名字，配置好 API 密钥后，点击生成美化签名。</p>
-        </div>
-
-        <div class="input-section">
-            <input type="text" id="signatureInput" placeholder="请输入需要生成签名的名字">
-        </div>
-
-        <div class="api-section">
-            <label for="apiKey">火山引擎API密钥：</label>
-            <div id="apiUnauthMsg" class="api-msg">请先登录以使用和保存您的 API Key。</div>
-            <div id="apiInputWrapper" class="api-input-wrapper" style="display: none;">
-                <input type="password" id="apiKey" placeholder="请输入API密钥">
-                <button type="button" id="toggleApiKeyVisibility" class="toggle-visibility-btn" title="显示/隐藏密钥">👁</button>
-            </div>
-        </div>
-
-        <div class="model-section" style="display: none;">
-            <label for="apiEndpoint">API 端点地址 (Endpoint)：</label>
-            <input type="text" id="apiEndpoint" placeholder="https://ark.cn-beijing.volces.com/api/v3/images/generations">
-        </div>
-
-        <div class="model-section" style="display: none;">
-            <label for="genModel">模型 ID (Model)：</label>
-            <input type="text" id="genModel" placeholder="ep-20250909161150-2tfck">
-        </div>
-
-        <div class="controls">
-            <button id="generateBtn" disabled title="请先输入火山引擎API密钥">生成美化签名</button>
-        </div>
-
-        <div class="process-steps" id="processSteps" style="display: none;">
-            <h3>生成流程</h3>
-            <div class="step" id="step1">
-                <span class="step-number">1</span>
-                <div class="step-content">
-                    <span class="step-text">调用 SeedDream 模型生成签名...</span>
-                    <div class="step-detail" id="step1Detail"></div>
+    <!-- Home View -->
+    <section id="view-home" class="view active">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <i data-lucide="sparkles"></i>
+                    <span>AI 驱动</span>
                 </div>
-                <span class="step-status">⏳</span>
+                <h1 class="hero-title">Text2Sign</h1>
+                <p class="hero-subtitle">用 AI 赋予你的名字独特的艺术签名</p>
             </div>
-        </div>
+        </section>
 
-        <div class="comparison" id="comparisonSection" style="display: none;">
-            <h3>签名结果</h3>
-            <div class="comparison-images" style="justify-content: center;">
-                <div class="image-box">
-                    <h4>美化签名</h4>
-                    <img id="generatedSignature" alt="美化签名">
-                    <button id="saveGeneratedBtn">保存美化签名</button>
+        <!-- CTA Section -->
+        <section class="cta-section">
+            <button id="ctaStartBtn" class="cta-button animate-fade-in-up">
+                <i data-lucide="rocket"></i>
+                <span>立即开始创建</span>
+            </button>
+            <p class="cta-subtitle">免费使用 AI 生成你的专属艺术签名</p>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features">
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon"><i data-lucide="wand-2"></i></div>
+                    <h3>AI 智能生成</h3>
+                    <p>基于豆包大模型，生成流畅自然的手写签名</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i data-lucide="palette"></i></div>
+                    <h3>个性化风格</h3>
+                    <p>每次生成都独一无二，展现你的个性</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i data-lucide="download"></i></div>
+                    <h3>一键保存</h3>
+                    <p>高清签名图片，随时下载使用</p>
                 </div>
             </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>本项目完全基于 Trae Vibe Coding 完成 · Powered by 豆包大模型</p>
+        </footer>
+    </section>
+
+    <!-- Generator View -->
+    <section id="view-generator" class="view">
+        <div class="generator-header">
+            <button id="backToHomeBtn" class="back-btn">
+                <i data-lucide="arrow-left"></i>
+                <span>返回首页</span>
+            </button>
+            <h2>AI 签名工作台</h2>
         </div>
 
-        <div class="status">
-            <p id="statusText">准备就绪，请输入名字并点击生成美化签名</p>
-        </div>
-    </div>
+        <!-- Main Interaction Section -->
+        <section class="main-interaction">
+            <div class="workspace-layout">
+                <!-- Left Panel: Input Configuration -->
+                <div class="workspace-left">
+                    <div class="input-section">
+                        <input type="text" id="signatureInput" placeholder="请输入需要生成签名的名字">
+                    </div>
+
+                    <div class="api-section">
+                        <label for="apiKey">火山引擎API密钥：</label>
+                        <div id="apiUnauthMsg" class="api-msg">请先登录以使用和保存您的 API Key。</div>
+                        <div id="apiInputWrapper" class="api-input-wrapper" style="display: none;">
+                            <input type="password" id="apiKey" placeholder="请输入API密钥">
+                            <button type="button" id="toggleApiKeyVisibility" class="toggle-visibility-btn" title="显示/隐藏密钥"><i data-lucide="eye"></i></button>
+                        </div>
+                    </div>
+
+                    <div class="model-section" id="endpointSection" style="display: none;">
+                        <label for="apiEndpoint">API 端点地址 (Endpoint)：</label>
+                        <div class="api-input-wrapper">
+                            <input type="password" id="apiEndpoint" placeholder="https://ark.cn-beijing.volces.com/api/v3/images/generations">
+                            <button type="button" id="toggleEndpointVisibility" class="toggle-visibility-btn" title="显示/隐藏端点地址"><i data-lucide="eye"></i></button>
+                        </div>
+                    </div>
+
+                    <div class="model-section" id="modelSection" style="display: none;">
+                        <label for="genModel">模型 ID (Model)：</label>
+                        <div class="api-input-wrapper">
+                            <input type="password" id="genModel" placeholder="ep-20250909161150-2tfck">
+                            <button type="button" id="toggleModelVisibility" class="toggle-visibility-btn" title="显示/隐藏模型ID"><i data-lucide="eye"></i></button>
+                        </div>
+                    </div>
+
+                    <div class="controls">
+                        <button id="generateBtn" disabled title="请先输入火山引擎API密钥">生成美化签名</button>
+                    </div>
+                </div>
+
+                <!-- Right Panel: Result Preview -->
+                <div class="workspace-right">
+                    <div class="result-area" id="resultArea">
+                        <div class="result-placeholder" id="resultPlaceholder">
+                            <div class="placeholder-icon">
+                                <i data-lucide="image-plus"></i>
+                            </div>
+                            <p>签名预览区域</p>
+                            <span>配置完成后点击生成按钮查看效果</span>
+                        </div>
+                        <div class="result-content" id="resultContent" style="display: none;">
+                            <img id="generatedSignature" alt="美化签名">
+                            <button id="saveGeneratedBtn">保存签名</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Status Bar -->
+            <div class="status-bar">
+                <p id="statusText">准备就绪，请输入名字并点击生成美化签名</p>
+            </div>
+        </section>
+    </section>
 
     <!-- Login/Register Modal -->
     <div id="authModal" class="modal">
         <div class="modal-content">
-            <span class="close-btn" id="closeModalBtn">&times;</span>
+            <span class="close-btn" id="closeModalBtn"><i data-lucide="x"></i></span>
             <h2 id="modalTitle">登录</h2>
             <div class="modal-body">
                 <input type="text" id="authUsername" placeholder="用户名" autocomplete="off">
@@ -101,5 +164,8 @@
     </div>
 
     <script src="src/js/script.js"></script>
+    <script>
+        lucide.createIcons();
+    </script>
 </body>
 </html>

@@ -2,6 +2,58 @@ let generatedSignatureData = null;
 let isLoginMode = true;
 let currentUsername = localStorage.getItem('text2sign_current_user') || null;
 
+// ============ View Router ============
+const VIEWS = {
+    HOME: 'home',
+    GENERATOR: 'generator'
+};
+
+let currentView = VIEWS.HOME;
+
+function switchView(viewName) {
+    if (!viewName || (viewName !== VIEWS.HOME && viewName !== VIEWS.GENERATOR)) return;
+
+    // 隐藏所有视图
+    document.querySelectorAll('.view').forEach(v => {
+        v.classList.remove('active');
+    });
+
+    // 显示目标视图 - CSS 中已经有 view.active 的动画了
+    const targetView = document.getElementById(`view-${viewName}`);
+    if (targetView) {
+        targetView.classList.add('active');
+    }
+
+    currentView = viewName;
+
+    // 更新 URL hash（不触发 hashchange）
+    if (window.history && window.history.pushState) {
+        history.pushState(null, '', `#${viewName}`);
+    } else {
+        window.location.hash = viewName;
+    }
+
+    // 滚动到顶部
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // 重新渲染 Lucide 图标
+    if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
+    }
+
+    // 特殊处理：进入生成器页时 focus 输入框
+    if (viewName === VIEWS.GENERATOR) {
+        setTimeout(() => {
+            if (isLoggedIn() && signatureInput) {
+                signatureInput.focus();
+            } else if (!isLoggedIn()) {
+                // 未登录则弹出登录框
+                openModal();
+            }
+        }, 500);
+    }
+}
+
 const USERS_KEY = 'text2sign_users';
 const CURRENT_USER_KEY = 'text2sign_current_user';
 
@@ -29,8 +81,8 @@ const genModelInput = document.getElementById('genModel');
 const generateBtn = document.getElementById('generateBtn');
 const saveGeneratedBtn = document.getElementById('saveGeneratedBtn');
 const statusText = document.getElementById('statusText');
-const comparisonSection = document.getElementById('comparisonSection');
-const processSteps = document.getElementById('processSteps');
+const resultPlaceholder = document.getElementById('resultPlaceholder');
+const resultContent = document.getElementById('resultContent');
 const generatedSignatureImg = document.getElementById('generatedSignature');
 
 // Auth DOM Elements
@@ -49,7 +101,10 @@ const authErrorMsg = document.getElementById('authErrorMsg');
 const apiUnauthMsg = document.getElementById('apiUnauthMsg');
 const apiInputWrapper = document.getElementById('apiInputWrapper');
 const toggleApiKeyVisibilityBtn = document.getElementById('toggleApiKeyVisibility');
-const modelSections = document.querySelectorAll('.model-section');
+const endpointSection = document.getElementById('endpointSection');
+const modelSection = document.getElementById('modelSection');
+const toggleEndpointVisibilityBtn = document.getElementById('toggleEndpointVisibility');
+const toggleModelVisibilityBtn = document.getElementById('toggleModelVisibility');
 
 document.addEventListener('DOMContentLoaded', () => {
     migrateLegacyData();
@@ -74,15 +129,52 @@ document.addEventListener('DOMContentLoaded', () => {
     navLoginBtn.addEventListener('click', openModal);
     closeModalBtn.addEventListener('click', closeModal);
     navLogoutBtn.addEventListener('click', logout);
-    authSwitchLink.addEventListener('click', toggleAuthMode);
     authSubmitBtn.addEventListener('click', handleAuthSubmit);
+    
+    // 使用事件委托处理切换链接，避免重复绑定
+    authSwitchText.addEventListener('click', (e) => {
+        if (e.target && e.target.id === 'authSwitchLink') {
+            e.preventDefault();
+            toggleAuthMode(e);
+        }
+    });
     
     // API Key visibility toggle
     toggleApiKeyVisibilityBtn.addEventListener('click', () => {
         const isPassword = apiKeyInput.type === 'password';
         apiKeyInput.type = isPassword ? 'text' : 'password';
-        toggleApiKeyVisibilityBtn.textContent = isPassword ? '🙈' : '👁';
+        
+        const icon = toggleApiKeyVisibilityBtn.querySelector('i');
+        if (icon) {
+            icon.setAttribute('data-lucide', isPassword ? 'eye-off' : 'eye');
+            lucide.createIcons();
+        }
+        
         toggleApiKeyVisibilityBtn.classList.toggle('active', !isPassword);
+    });
+    
+    // Endpoint visibility toggle
+    toggleEndpointVisibilityBtn.addEventListener('click', () => {
+        const isPassword = apiEndpointInput.type === 'password';
+        apiEndpointInput.type = isPassword ? 'text' : 'password';
+        const icon = toggleEndpointVisibilityBtn.querySelector('i');
+        if (icon) {
+            icon.setAttribute('data-lucide', isPassword ? 'eye-off' : 'eye');
+            lucide.createIcons();
+        }
+        toggleEndpointVisibilityBtn.classList.toggle('active', !isPassword);
+    });
+    
+    // Model ID visibility toggle
+    toggleModelVisibilityBtn.addEventListener('click', () => {
+        const isPassword = genModelInput.type === 'password';
+        genModelInput.type = isPassword ? 'text' : 'password';
+        const icon = toggleModelVisibilityBtn.querySelector('i');
+        if (icon) {
+            icon.setAttribute('data-lucide', isPassword ? 'eye-off' : 'eye');
+            lucide.createIcons();
+        }
+        toggleModelVisibilityBtn.classList.toggle('active', !isPassword);
     });
     
     // Close modal on outside click
@@ -92,9 +184,107 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Keyboard shortcuts
+    signatureInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' && !generateBtn.disabled) {
+            generateSignature();
+        }
+    });
+    
+    authPassword.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            handleAuthSubmit();
+        }
+    });
+
     updateAuthState();
     checkInputState();
+    
+    triggerEntranceAnimations();
+
+    // ============ View Routing Events ============
+
+    // Hash 变化监听（浏览器前进/后退）
+    window.addEventListener('hashchange', () => {
+        const hash = window.location.hash.slice(1) || VIEWS.HOME;
+        if (hash !== currentView && (hash === VIEWS.HOME || hash === VIEWS.GENERATOR)) {
+            switchView(hash);
+        }
+    });
+
+    // popstate 监听（浏览器后退按钮）
+    window.addEventListener('popstate', () => {
+        const hash = window.location.hash.slice(1) || VIEWS.HOME;
+        if (hash !== currentView) {
+            switchView(hash);
+        }
+    });
+
+    // 初始化时检查 hash
+    const initialHash = window.location.hash.slice(1);
+    if (initialHash === VIEWS.GENERATOR) {
+        switchView(VIEWS.GENERATOR);
+    }
+
+    // CTA 按钮 → 跳转到生成器
+    const ctaStartBtn = document.getElementById('ctaStartBtn');
+    if (ctaStartBtn) {
+        ctaStartBtn.addEventListener('click', () => {
+            switchView(VIEWS.GENERATOR);
+        });
+    }
+
+    // 返回按钮 → 回到首页
+    const backToHomeBtn = document.getElementById('backToHomeBtn');
+    if (backToHomeBtn) {
+        backToHomeBtn.addEventListener('click', () => {
+            switchView(VIEWS.HOME);
+        });
+    }
+
+    // Navbar 品牌点击 → 回到首页（可选增强）
+    const navBrand = document.querySelector('.nav-brand');
+    if (navBrand) {
+        navBrand.style.cursor = 'pointer';
+        navBrand.addEventListener('click', () => {
+            if (currentView !== VIEWS.HOME) {
+                switchView(VIEWS.HOME);
+            }
+        });
+    }
 });
+
+function triggerEntranceAnimations() {
+    // CSS 中已经定义了 animate-fade-in-up 的动画，无需额外处理
+    // 该类已经包含了 opacity: 0 到 opacity: 1 的渐变动画
+}
+
+function setButtonLoading(button, isLoading, loadingText = '处理中...') {
+    if (isLoading) {
+        button.disabled = true;
+        button.innerHTML = `<span class="spinner"></span> ${loadingText}`;
+        button.classList.add('loading');
+    } else {
+        button.disabled = false;
+        button.classList.remove('loading');
+    }
+}
+
+function setAuthButtonLoading(isLoading) {
+    if (isLoading) {
+        authSubmitBtn.disabled = true;
+        authSubmitBtn.innerHTML = '<span class="spinner"></span> 处理中...';
+        authSubmitBtn.classList.add('loading');
+    } else {
+        authSubmitBtn.disabled = false;
+        authSubmitBtn.innerHTML = isLoginMode ? '登录' : '注册';
+        authSubmitBtn.classList.remove('loading');
+    }
+}
+
+function updateStatus(message) {
+    statusText.textContent = message;
+}
 
 // LocalStorage Helpers
 function getUsers() {
@@ -128,7 +318,8 @@ function updateAuthState() {
         
         apiUnauthMsg.style.display = 'none';
         apiInputWrapper.style.display = 'flex';
-        modelSections.forEach(s => s.style.display = '');
+        endpointSection.style.display = '';
+        modelSection.style.display = '';
         
         fetchUserConfig();
     } else {
@@ -138,7 +329,8 @@ function updateAuthState() {
         
         apiUnauthMsg.style.display = 'block';
         apiInputWrapper.style.display = 'none';
-        modelSections.forEach(s => s.style.display = 'none');
+        endpointSection.style.display = 'none';
+        modelSection.style.display = 'none';
         apiKeyInput.value = '';
         apiEndpointInput.value = '';
         genModelInput.value = '';
@@ -153,6 +345,10 @@ function openModal() {
     authPassword.value = '';
     isLoginMode = true;
     updateModalUI();
+    
+    setTimeout(() => {
+        authUsername.focus();
+    }, 300);
 }
 
 function closeModal() {
@@ -188,8 +384,7 @@ function handleAuthSubmit() {
         return;
     }
     
-    authSubmitBtn.disabled = true;
-    authSubmitBtn.textContent = '处理中...';
+    setAuthButtonLoading(true);
     authErrorMsg.textContent = '';
     
     setTimeout(() => {
@@ -202,8 +397,7 @@ function handleAuthSubmit() {
         } catch (error) {
             authErrorMsg.textContent = error.message;
         } finally {
-            authSubmitBtn.disabled = false;
-            authSubmitBtn.textContent = isLoginMode ? '登录' : '注册';
+            setAuthButtonLoading(false);
         }
     }, 300);
 }
@@ -310,29 +504,6 @@ function checkInputState() {
     }
 }
 
-function updateStatus(message) {
-    statusText.textContent = message;
-}
-
-function updateStep(stepNum, status, isCompleted = false, isActive = false) {
-    const step = document.getElementById(`step${stepNum}`);
-    if (!step) return;
-    const statusEl = step.querySelector('.step-status');
-    
-    step.classList.remove('completed', 'active');
-    if (isCompleted) step.classList.add('completed');
-    if (isActive) step.classList.add('active');
-    
-    statusEl.textContent = status;
-}
-
-function updateStepDetail(stepNum, detail) {
-    const detailEl = document.getElementById(`step${stepNum}Detail`);
-    if (detailEl) {
-        detailEl.textContent = detail;
-    }
-}
-
 function saveGeneratedSignature() {
     if (generatedSignatureData) {
         fetch(generatedSignatureData)
@@ -354,9 +525,7 @@ function saveGeneratedSignature() {
     }
 }
 
-async function generateSignatureImage(text) {
-    updateStep(1, '⏳', false, true);
-    
+async function generateSignatureImage(text) {    
     try {
         const apiKey = apiKeyInput.value.trim();
         const apiEndpoint = apiEndpointInput.value.trim();
@@ -368,7 +537,6 @@ async function generateSignatureImage(text) {
         
         updateStatus(`调用模型 ${genModel}...`);
         const promptText = `生成一个漂亮的手写体签名，内容是"${text}"，使用优雅的手写风格，白色背景，黑色文字，字体流畅自然。`;
-        updateStepDetail(1, `端点: ${apiEndpoint}\n模型: ${genModel}\nPrompt: ${promptText}`);
         
         const response = await fetch(apiEndpoint, {
             method: 'POST',
@@ -387,7 +555,6 @@ async function generateSignatureImage(text) {
             throw new Error(`API调用失败: HTTP ${response.status} - ${errorData.error?.message || '未知错误'}`);
         }
         
-        updateStepDetail(1, 'API 响应成功，正在提取图片 URL...');
         const data = await response.json();
         const imageUrl = data.data?.[0]?.url;
         
@@ -395,14 +562,9 @@ async function generateSignatureImage(text) {
             throw new Error('API返回格式错误，未找到图片URL');
         }
         
-        updateStepDetail(1, '获取到图片 URL，正在处理...');
-        updateStepDetail(1, '签名图片生成完毕');
-        updateStep(1, '✅', true, false);
         return imageUrl;
     } catch (error) {
         console.error('签名生成失败:', error);
-        updateStepDetail(1, `生成失败: ${error.message}`);
-        updateStep(1, '⚠️', true, false);
         throw error;
     }
 }
@@ -420,14 +582,11 @@ async function generateSignature() {
         return;
     }
 
-    comparisonSection.style.display = 'block';
-    processSteps.style.display = 'block';
-    generateBtn.disabled = true;
+    resultPlaceholder.style.display = 'none';
+    resultContent.style.display = 'flex';
+    setButtonLoading(generateBtn, true, '正在生成...');
     
     updateStatus('开始生成美化签名...');
-    
-    updateStep(1, '⏳', false, false);
-    updateStepDetail(1, '');
     
     try {
         generatedSignatureData = await generateSignatureImage(text);
@@ -437,7 +596,9 @@ async function generateSignature() {
     } catch (error) {
         console.error('生成签名失败:', error);
         updateStatus('生成签名失败: ' + error.message);
+        resultPlaceholder.style.display = 'flex';
+        resultContent.style.display = 'none';
     } finally {
-        generateBtn.disabled = false;
+        setButtonLoading(generateBtn, false);
     }
 }
