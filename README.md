@@ -1,24 +1,18 @@
 <div align="center">
 
-# ✨ text2sign ✨
+# text2sign
 
 **豆包大模型个性化签名生成器 | Doubao LLM Personalized Signature Generator**
 
-[![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/HTML)
-[![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/CSS)
-[![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
-[![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org/)
-[![Express](https://img.shields.io/badge/Express-000000?style=for-the-badge&logo=express&logoColor=white)](https://expressjs.com/)
-[![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)](https://www.mysql.com/)
-[![Volcengine](https://img.shields.io/badge/Volcengine-SeedDream-blue?style=for-the-badge)](https://www.volcengine.com/)
-[![Trae](https://img.shields.io/badge/Built_with-Trae_Vibe_Coding-blueviolet?style=for-the-badge)](https://www.trae.ai)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
+[![Volcengine SeedDream](https://img.shields.io/badge/SeedDream-Volcengine-blue?style=flat-square)](https://www.volcengine.com/)
+[![Built with Trae](https://img.shields.io/badge/Trae-Vibe_Coding-blueviolet?style=flat-square)](https://www.trae.ai)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green?style=flat-square)](https://opensource.org/licenses/MIT)
 
-[中文文档](#中文文档) • [English Documentation](#english-documentation)
-
----
+[中文文档](#中文文档) · [English Documentation](#english-documentation)
 
 </div>
+
+---
 
 <h2 id="中文文档">🇨🇳 中文文档</h2>
 
@@ -29,6 +23,15 @@
 > 💡 **本项目是完全基于 Trae Vibe Coding 完成。**
 
 前端采用原生 HTML/CSS/JS 构建，UI 遵循 Apple 设计规范；后端基于 Express + MySQL 提供用户认证与 API Key 管理服务。
+
+### 📸 界面预览
+
+<p align="center">
+  <img src="screenshot/screenshot-20260412-184353.png" alt="首页预览" width="800"/>
+</p>
+<p align="center">
+  <img src="screenshot/screenshot-20260410-222235.png" alt="签名工作台预览" width="800"/>
+</p>
 
 ### 🏗️ 项目架构
 
@@ -111,19 +114,10 @@ text2sign/
 | `/api_key` | GET | 获取绑定的 API Key | ✅ JWT |
 | `/api_key` | POST | 更新绑定的 API Key | ✅ JWT |
 
-### 📸 界面预览
-
-*(稍后您可以将实际的项目截图替换此处的占位图)*
-<p align="center">
-  <img src="https://via.placeholder.com/800x450?text=Screenshot+Placeholder" alt="Screenshot" width="800"/>
-</p>
-
 ### 📄 许可证
 本项目基于 [MIT License](LICENSE) 开源。
 
 ---
-
-<br>
 
 <h2 id="english-documentation">🇬🇧 English Documentation</h2>
 
@@ -134,6 +128,15 @@ text2sign/
 > 💡 **This project is completely built based on Trae Vibe Coding.**
 
 The frontend is built with vanilla HTML/CSS/JS following Apple's design language, while the backend is powered by Express + MySQL, providing user authentication and API Key management services.
+
+### 📸 Screenshot
+
+<p align="center">
+  <img src="screenshot/screenshot-20260412-184353.png" alt="Home Page" width="800"/>
+</p>
+<p align="center">
+  <img src="screenshot/screenshot-20260410-222235.png" alt="Signature Workspace" width="800"/>
+</p>
 
 ### 🏗️ Project Architecture
 
@@ -215,13 +218,6 @@ text2sign/
 | `/login` | POST | User login | ❌ |
 | `/api_key` | GET | Get bound API Key | ✅ JWT |
 | `/api_key` | POST | Update bound API Key | ✅ JWT |
-
-### 📸 Screenshot
-
-*(You can replace this placeholder with a real screenshot of your app later)*
-<p align="center">
-  <img src="https://via.placeholder.com/800x450?text=Screenshot+Placeholder" alt="Screenshot" width="800"/>
-</p>
 
 ### 📄 License
 This project is licensed under the [MIT License](LICENSE).
