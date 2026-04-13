@@ -27,10 +27,10 @@
 ### 📸 界面预览
 
 <p align="center">
-  <img src="screenshot/screenshot-20260412-184353.png" alt="首页预览" width="800"/>
+  <img src="screenshot/screenshot-20260410-222235.png" alt="签名工作台预览" width="800"/>
 </p>
 <p align="center">
-  <img src="screenshot/screenshot-20260410-222235.png" alt="签名工作台预览" width="800"/>
+  <img src="screenshot/screenshot-20260412-184353.png" alt="首页预览" width="800"/>
 </p>
 
 ### 🏗️ 项目架构
@@ -132,10 +132,10 @@ The frontend is built with vanilla HTML/CSS/JS following Apple's design language
 ### 📸 Screenshot
 
 <p align="center">
-  <img src="screenshot/screenshot-20260412-184353.png" alt="Home Page" width="800"/>
+  <img src="screenshot/screenshot-20260410-222235.png" alt="Signature Workspace" width="800"/>
 </p>
 <p align="center">
-  <img src="screenshot/screenshot-20260410-222235.png" alt="Signature Workspace" width="800"/>
+  <img src="screenshot/screenshot-20260412-184353.png" alt="Home Page" width="800"/>
 </p>
 
 ### 🏗️ Project Architecture
